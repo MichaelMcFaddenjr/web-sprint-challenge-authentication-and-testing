@@ -3,9 +3,7 @@ const { findByUserName } = require('../auth/auth-model')
 const checkCred = (req, res, next) => {
   let creds = req.body
   if (!creds.username || !creds.password) {
-    res.status(400).json({
-      message: 'username and password required'
-    })
+    res.status(400).json({message: 'username and password required'})
   }
   findByUserName(req.body.username)
   .then((user) => {
@@ -21,9 +19,7 @@ const checkCred = (req, res, next) => {
 const checkUserExists = (req, res, next) => {
   let creds = req.body
   if (!creds.username || !creds.password) {
-    res.status(400).json({
-      message: 'username and password required'
-    })
+    res.status(400).json({message: 'username and password required'})
   }
   findByUserName(req.body.username)
     .then((user) => {
