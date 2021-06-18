@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const { add } = require('./auth-model')
-const { checkCred } = require('../middleware/checkUser')
+const { checkCred, checkUserExists } = require('../middleware/checkUser')
 const { tokenBuilder } = require('../middleware/tokenBuilder')
 
 
@@ -46,20 +46,20 @@ router.post('/register', checkCred, (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-router.post('/login', (req, res) => {
-  const user = req.body.user
-  const { username, password } = req.body
-  
+ router.post("/login", checkUserExists, (req, res, next) => {
+  const user = req.body.user;
+  const { username, password } = req.body;
+
   if (user && bcrypt.compareSync(password, user.password)) {
-    const token = tokenBuilder(user)
+    const token = tokenBuilder(user);
     res.status(200).json({
-      message: `welcome, ${username}`,
-      token:token
-    })
+      message: `welcome, ${username} `,
+      token: token,
+    });
   } else {
     res.status(401).json({
-      message: 'invalid credentials'
-    })
+      message: "invalid credentials",
+    });
   }
 });
 /*

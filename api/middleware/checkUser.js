@@ -18,6 +18,25 @@ const checkCred = (req, res, next) => {
   .catch(next)
 }
 
+const checkUserExists = (req, res, next) => {
+  let creds = req.body
+  if (!creds.username || !creds.password) {
+    res.status(400).json({
+      message: 'username and password required'
+    })
+  }
+  findByUserName(req.body.username)
+    .then((user) => {
+      if (user) {
+        req.body.user = user
+        next()
+      } else {
+        res.status(401).json('invalid credentials')
+      }
+    })
+    .catch(next)
+}
 module.exports = {
-  checkCred
+  checkCred,
+  checkUserExists
 }
